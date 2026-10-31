@@ -1,0 +1,15 @@
+
+#Display
+WIDTH = 400
+HEIGHT = 400
+
+#Case
+RECT_SIZE = WIDTH//8  #50
+#Colors
+BACKGROUND_COLOR = (0,0,0)
+LIGHT = (240, 217, 181)
+DARK = (181, 136, 99)
+GREEN_OPACITY = (20, 85, 30, 120)
+#indication
+RADIUS = RECT_SIZE//6
+
