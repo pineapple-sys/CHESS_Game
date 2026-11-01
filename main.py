@@ -32,19 +32,20 @@ def click(event, coord, matrice, active):
         
         for i in coord:
             for a in i:
-                if not isinstance(a, list):
+                if not isinstance(a, list) and len(i)>1:
                     cases_r.append((int(i[1]),int(i[0])))
                   
-                else:
+                elif len(i)>=1 and len(a)>1:
                     cases_r.append((int(a[1]),int(a[0])))
 
         
         c =list(event.pos)
         c =(round(c[0]//RECT_SIZE),round(c[1]//RECT_SIZE))
+        
         if c in cases_r:
             if active == (c[0]*RECT_SIZE,c[1]*RECT_SIZE):
                 return ()
-            
+
             return (c[0]*RECT_SIZE,c[1]*RECT_SIZE)
         
     return active
@@ -102,6 +103,7 @@ def main():
     pawn_double,plateau, position,coord, player, player_pos= game.start()
     active = () #piece quon touche en vert: (20, 85, 30)
     possibilities = []
+    white_turn = True
     running = True
     while running:
        
@@ -111,7 +113,7 @@ def main():
             active = click(event, player, plateau, active)
             possibilities = mov(active,player, event, plateau, position, player_pos, pawn_double)
             if active and event.type == py.MOUSEBUTTONDOWN and event.button ==1:
-                game.deplacement(active, position,possibilities, plateau,event, coord, pawn_double)
+                coord,position, player_pos, player= game.deplacement(active, position,possibilities, plateau,event, coord, pawn_double)
         screen.fill(BACKGROUND_COLOR)
         draw_board(screen)
         if active:
@@ -119,6 +121,7 @@ def main():
         show_piece(screen,coord, position)
         py.display.flip()
     print(pawn_double)
+    print(player_pos)
     py.quit()
     sys.exit()
 

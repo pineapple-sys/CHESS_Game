@@ -141,9 +141,10 @@ def legal_mov(piece,emplacement, plateau, player_pos, pawn):
     if piece=="white-pawn":
         mov1 = emplacement[0]+str(int(emplacement[1])+1)
         mov = [mov1]
-        if pawn[emplacement] == True:
-            mov2 = emplacement[0]+str(int(emplacement[1])+2)
-            mov.append(mov2)
+        if emplacement in pawn:
+            if pawn[emplacement] == True:
+                mov2 = emplacement[0]+str(int(emplacement[1])+2)
+                mov.append(mov2)
         legal = ''
         for i in mov:
             legal += i+" "
@@ -280,9 +281,14 @@ def deplacement(active, position,possibilities, matrice, event, coord, pawn_doub
     case = matrice[elem[0]][elem[1]]
     future_case = matrice[mouse_pos[0]][mouse_pos[1]]
     if case in position["white-pawn"].split():
-        if int(future_case[1])-int(case[1]):
+        if int(future_case[1])-int(case[1])==2:
             pawn_double[future_case] = False
-            #pawn_double.pop(case)  avant de faire ça faut mettre a jour position player_pos etccc
+            pawn_double.pop(case)
+            ligne = ""
+            for i in position["white-pawn"]:
+                if i !=case:
+                    ligne += i +" " 
+            position["white-pawn"] = ligne#avant de faire ça faut mettre a jour position player_pos etccc
     if mouse_pos in coord_possible:
         for i in coord[:]:
             if isinstance(i, list) and len(i)>=1:
@@ -297,7 +303,7 @@ def deplacement(active, position,possibilities, matrice, event, coord, pawn_doub
                         coord.append(mouse_pos)
    
     
-    """
+    
     for i in coord_possible:
         if mouse_pos == i:
             pos_elem = (active[1]//RECT_SIZE,active[0]//RECT_SIZE)
@@ -312,11 +318,24 @@ def deplacement(active, position,possibilities, matrice, event, coord, pawn_doub
                             lign += a + " "
                     position[i] = lign
                 elif str(position[i]) == str(matrice[pos_elem[0]][pos_elem[1]]):
-                    position = ""
+                    position[i] = ""
                     piece = i
 
             
             position[i] += matrice[mouse_pos[0]][mouse_pos[1]]
-    """
+    player_pos = {i:position[i] for i in position if i[:5]=="white"}
+
+    player = []
+    for i in player_pos:
+        if len(player_pos[i].split())>1:
+            ligne = player_pos[i].split()
+            liste = []
+            for a in ligne:
+                liste.append(list(np.argwhere(matrice==a)))
+            player.append(liste)
+        else:
+            player.append(list(np.argwhere(matrice==player_pos[i])))
+    
+    return coord, position, player_pos, player
    
 
